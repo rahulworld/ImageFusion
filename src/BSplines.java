@@ -1,5 +1,3 @@
-import java.awt.Color;
-
 public class BSplines {
 
     public double bspline(int degree, double x){
