@@ -1,5 +1,3 @@
-import java.awt.image.BufferedImage;
-import java.awt.image.Raster;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;

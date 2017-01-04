@@ -62,39 +62,4 @@ public class BSplines {
         }
         return betta;
     }
-    
-    public static void main(String[] args){
-    
-        double x[];
-        double b0[];
-        double b1[];
-        double b2[];
-        double b3[];
-        
-        int M = 200;
-        x = new double[M];
-        b0 = new double[M];
-        b1 = new double[M];
-        b2 = new double[M];
-        b3 = new double[M];
-        
-        for( int k=0; k<x.length; k++){
-            x[k] = (k-50.0)/30.0;
-        }   
-        
-        BSplines bSplines = new BSplines();
-        
-        for( int k=0; k<x.length; k++){             
-            b0[k]= bSplines.bspline(0,x[k]);
-            b1[k]= bSplines.bspline(1,x[k]-1);
-            b2[k]= bSplines.bspline(2,x[k]-2);
-            b3[k]= bSplines.bspline(3,x[k]-3);          
-        }
-
-        Figure figure = new Figure("bsplines","x","betta");
-        figure.line(x,b0, Color.BLUE, 2.0f);
-        figure.line(x,b1, Color.RED, 2.0f);
-        figure.line(x,b2, Color.BLACK, 2.0f);
-        figure.line(x,b3, Color.MAGENTA, 2.0f);
-    }
 }
