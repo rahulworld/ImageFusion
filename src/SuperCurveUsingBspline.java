@@ -2,11 +2,14 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.util.Scanner;
 
 import javax.imageio.ImageIO;
 
-public class SuperCurveUsingBspline {
+import Jama.Matrix;
+
+public class SuperCurveUsingBspline extends Object implements Cloneable, Serializable {
 	private static final String FILE_IN_PATH = "./data/data.txt";
 	private static final String FILE_OUT_PATH = "./data/";
 
@@ -15,9 +18,65 @@ public class SuperCurveUsingBspline {
     public SuperCurveUsingBspline(){
         bS = new BSplines();
     }
-    
+ //ONLY TWO ROWS Single rotation
+    public static double[][] singleRotation(double[][] loadingFactorMatrix, int k, int l, double angle){
+        int nRows = loadingFactorMatrix.length;
+        int nColumns = loadingFactorMatrix[0].length;
+        double[][] rotatedMatrix = new double[nRows][nColumns];
+        for(int i=0; i<nRows; i++){
+            for(int j=0; j<nColumns; j++){
+                rotatedMatrix[i][j] = loadingFactorMatrix[i][j];
+            }
+        }
+        double sinphi = Math.sin(angle);
+        double cosphi = Math.cos(angle);
+        for(int j=0; j<nColumns; j++){
+            rotatedMatrix[k][j] = loadingFactorMatrix[k][j]*cosphi + loadingFactorMatrix[l][j]*sinphi;
+            rotatedMatrix[l][j] = -loadingFactorMatrix[k][j]*sinphi + loadingFactorMatrix[l][j]*cosphi;
+        }
+        return rotatedMatrix;
+    }
+//SCALING OF ARRAY
+    public static double[][] scaleArray(double[][] arr, int scale){
+        double[][] resultArr;
+        int rowCount = 0;
+        int columnCount = 0;
+        boolean check = true;
+        rowCount = arr.length;
+        if (rowCount == 0)
+            check = false;
+        if (check) {
+            columnCount = arr[0].length;
+            System.out.println("Row count = " + rowCount);
+            System.out.println("Column count = " + columnCount);
+            int resultRow = rowCount * scale;
+            int resultCol = columnCount * scale;
+            resultArr = new double[resultRow][resultCol];
+            int r = 0;
+            int count = 0;
+            int c;
+            for (int i = 0; i < resultRow; i++) {
+                c = 0;
+                for (int j = 0; j < columnCount; j++) {
+                    for (int k = 0; k < scale; k++) {
+                        resultArr[i][c] = arr[r][j];
+                        c++;
+                    }
+                }
+                count++;
+                if (count >= scale) {
+                    r++;
+                    count = 0;
+                }
+            }
+            return resultArr;
+        }
+        else {
+            System.out.println("Parent array does not have any element!!");
+            return null;
+        }
+    }
     private double[][] mirrorW2d( double [][] s){
-
         double [][] s_mirror = new double[s.length+3][s[0].length+3];
         for(int i=0; i<s.length; i++){
             for(int j=0; j<s[0].length; j++){
@@ -136,39 +195,118 @@ public class SuperCurveUsingBspline {
 	public static void main(String[] args){
     		//Write mixing txt file
             File out = new File(FILE_OUT_PATH +"out3.txt");
-            double[][] pix_spec1=new double[3][72];
-            double[][] pix_spec2=new double[3][72];
+            double[][] l1=new double[1][72];
+            double[][] l2=new double[1][72];
+            double[][] l3=new double[1][72];
+            double[][] d1=new double[1][72];
+            double[][] d2=new double[1][72];
+            double[][] d3=new double[1][72];
             double[][] MIXED_CURVE=new double[3][72];
     		try {
-    			File file_1=new File("./data/avgLibrary.txt");
-    			File file_2=new File("./data/avgLunarData.txt");
+    			File file_1=new File("./data/l1.txt");
+    			File file_2=new File("./data/l2.txt");
+    			File file_3=new File("./data/l3.txt");
+    			File file_4=new File("./data/d1.txt");
+    			File file_5=new File("./data/d2.txt");
+    			File file_6=new File("./data/d3.txt");
     		          Scanner sc1 = new Scanner(file_1);
     		          Scanner sc2 = new Scanner(file_2);
+    		          Scanner sc3 = new Scanner(file_3);
+    		          Scanner sc4 = new Scanner(file_4);
+    		          Scanner sc5 = new Scanner(file_5);
+    		          Scanner sc6 = new Scanner(file_6);
     		          sc1.useDelimiter(",");
     		          sc2.useDelimiter(",");
-    		          for(int i=0;i<3;i++){
+    		          sc3.useDelimiter(",");
+    		          sc4.useDelimiter(",");
+    		          sc5.useDelimiter(",");
+    		          sc6.useDelimiter(",");
+    		          for(int i=0;i<1;i++){
     		              for(int j=0;j<72;j++){
-    		                 pix_spec1[i][j]=sc1.nextDouble();
-    		                  //count++; 
-    		                 pix_spec2[i][j]=sc2.nextDouble();
+    		                 l1[i][j]=sc1.nextDouble();
+    		                 l2[i][j]=sc2.nextDouble();
+    		                 l3[i][j]=sc3.nextDouble();
+    		                 d1[i][j]=sc4.nextDouble();
+    		                 d2[i][j]=sc5.nextDouble();
+    		                 d3[i][j]=sc6.nextDouble();
     		                 
-    		                 System.out.print(pix_spec1[i][j]+"  ");
-    		                 System.out.println(pix_spec2[i][j]);    		                 
+    		                 System.out.print(l1[i][j]+"  ");
+    		                 System.out.print(l2[i][j]+"  ");
+    		                 System.out.print(l3[i][j]+"  ");
+    		                 System.out.print(d1[i][j]+"  ");
+    		                 System.out.print(d2[i][j]+"  ");
+    		                 System.out.println(d3[i][j]); 		                 
     		              }
     		              System.out.println();
     		              sc1.nextLine();
     		              sc2.nextLine();
+    		              sc3.nextLine();
+    		              sc4.nextLine();
+    		              sc5.nextLine();
+    		              sc6.nextLine();
     		          }
     		          sc1.close();
     		          sc2.close();
+    		          sc3.close();
+    		          sc4.close();
+    		          sc5.close();
+    		          sc6.close();
     		          SuperCurveUsingBspline mixCurve = new SuperCurveUsingBspline();
-    		          MIXED_CURVE=mixCurve.mixingOfCurveUsingBspline(pix_spec1,pix_spec2,3);
-    		          for(int i=0;i<3;i++){
-    		              for(int j=0;j<72;j++){    		                 
-    		                 System.out.print(MIXED_CURVE[i][j]+"  ");    		                 
-    		              }
-    		              System.out.println();
+    		          for(int k=0;k<3;k++){
+    		        	  for(int l=0;l<3;l++){    		        		  
+    		        	  }
     		          }
+    		          /*
+    		           * Using transformation see error using matching error class 
+    		           * scaling and shearing
+    		           * 
+    		           * THREE LIBRARY CURVES l1 l2 l3
+    		           * THREE DATA SETS d1 d2 d3
+    		           * 
+    		           * WHEN LIBRARY AND DATA SETS MATCH WITH MINIMUM ERROR THEN APLLY MIXING OF CURVE GETTING
+    		           * RETURN CURVE SETS IN THE FORM OF ARRAY
+    		           * 
+    		           * 
+    		           * 
+    		           * 
+    		           * 
+    		           * 
+    		           */
+    		          //DATASETS
+    		          Matrix A1=new Matrix(d1);
+    		          Matrix B1=new Matrix(d2);
+    		          Matrix C1=new Matrix(d3);
+    		          Matrix D=A1.times(10);
+    		          Matrix E=B1.times(10);
+    		          Matrix F=C1.times(10);
+//    		          //LIBRARRY SETS
+//    		          Matrix A2=new Matrix(d1);
+//    		          Matrix B2=new Matrix(d2);
+//    		          Matrix C2=new Matrix(d3);
+//    		          A1.print(1, 6);
+//    		          D.print(1, 6);
+//    		          B1.print(1, 6);
+//    		          E.print(1, 6);
+//    		          C1.print(1, 6);
+//    		          F.print(1, 6);
+    		          System.out.println("\n\n========================After Transformation===============\n\n");
+    		          for(int i=0;i<1;i++){
+    		              for(int j=0;j<72;j++){
+    		                 System.out.print(l1[i][j]+"  ");
+    		                 System.out.print(l2[i][j]+"  ");
+    		                 System.out.print(l3[i][j]+"  ");
+    		                 System.out.print(D.getArray()[i][j]+"  ");
+    		                 System.out.print(E.getArray()[i][j]+"  ");
+    		                 System.out.println(F.getArray()[i][j]); 		                 
+    		              }
+    		          }
+//    		          MIXED_CURVE=mixCurve.mixingOfCurveUsingBspline(l1,d1,1);
+//    		          for(int i=0;i<1;i++){
+//    		              for(int j=0;j<72;j++){    		                 
+//    		                 System.out.print(MIXED_CURVE[i][j]+"  ");    		                 
+//    		              }
+//    		              System.out.println();
+//    		          }
 //    			PrintWriter pw = new PrintWriter(new FileWriter(out));
 //    			pw.close();
     		} catch (IOException e) {
