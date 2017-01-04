@@ -300,6 +300,12 @@ public class SuperCurveUsingBspline extends Object implements Cloneable, Seriali
     		                 System.out.println(F.getArray()[i][j]); 		                 
     		              }
     		          }
+    		          MatchError M1=new MatchError();
+    		          if(M1.almostEquals(l1, D.getArrayCopy(),0.5000000)){
+    		        	  System.out.println("\n YES, Curved Matched");
+    		          }else{
+    		        	  System.out.println("\n NO");
+    		          }
 //    		          MIXED_CURVE=mixCurve.mixingOfCurveUsingBspline(l1,d1,1);
 //    		          for(int i=0;i<1;i++){
 //    		              for(int j=0;j<72;j++){    		                 
