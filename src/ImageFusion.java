@@ -106,25 +106,25 @@ public class ImageFusion {
 //        coeffs_mirror1[k+2][l+3]*coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k-1)*bS.bspline(3,col-l-2)+
 //        coeffs_mirror1[k+3][l+3]*coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k-2)*bS.bspline(3,col-l-2);
         double interp_value =   
-                (coeffs_mirror1[k+0][l+0]*coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k+1)*bS.bspline(3,col-l+1)+ 
-                coeffs_mirror1[k+1][l+0]*coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k+0)*bS.bspline(3,col-l+1)+
-                coeffs_mirror1[k+2][l+0]*coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k-1)*bS.bspline(3,col-l+1)+
-                coeffs_mirror1[k+3][l+0]*coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k-2)*bS.bspline(3,col-l+1)+
+                (coeffs_mirror1[k+0][l+0]*bS.bspline(3,row-k+1)*bS.bspline(3,col-l+1)+ 
+                coeffs_mirror1[k+1][l+0]*bS.bspline(3,row-k+0)*bS.bspline(3,col-l+1)+
+                coeffs_mirror1[k+2][l+0]*bS.bspline(3,row-k-1)*bS.bspline(3,col-l+1)+
+                coeffs_mirror1[k+3][l+0]*bS.bspline(3,row-k-2)*bS.bspline(3,col-l+1)+
                                                                             
-                coeffs_mirror1[k+0][l+1]*coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k+1)*bS.bspline(3,col-l+0)+ 
-                coeffs_mirror1[k+1][l+1]*coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k+0)*bS.bspline(3,col-l+0)+
-                coeffs_mirror1[k+2][l+1]*coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k-1)*bS.bspline(3,col-l+0)+
-                coeffs_mirror1[k+3][l+1]*coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k-2)*bS.bspline(3,col-l+0)+
+                coeffs_mirror1[k+0][l+1]*bS.bspline(3,row-k+1)*bS.bspline(3,col-l+0)+ 
+                coeffs_mirror1[k+1][l+1]*bS.bspline(3,row-k+0)*bS.bspline(3,col-l+0)+
+                coeffs_mirror1[k+2][l+1]*bS.bspline(3,row-k-1)*bS.bspline(3,col-l+0)+
+                coeffs_mirror1[k+3][l+1]*bS.bspline(3,row-k-2)*bS.bspline(3,col-l+0)+
                                                                                                         
-                coeffs_mirror1[k+0][l+2]*coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k+1)*bS.bspline(3,col-l-1)+ 
-                coeffs_mirror1[k+1][l+2]*coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k+0)*bS.bspline(3,col-l-1)+
-                coeffs_mirror1[k+2][l+2]*coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k-1)*bS.bspline(3,col-l-1)+
-                coeffs_mirror1[k+3][l+2]*coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k-2)*bS.bspline(3,col-l-1)+
+                coeffs_mirror1[k+0][l+2]*bS.bspline(3,row-k+1)*bS.bspline(3,col-l-1)+ 
+                coeffs_mirror1[k+1][l+2]*bS.bspline(3,row-k+0)*bS.bspline(3,col-l-1)+
+                coeffs_mirror1[k+2][l+2]*bS.bspline(3,row-k-1)*bS.bspline(3,col-l-1)+
+                coeffs_mirror1[k+3][l+2]*bS.bspline(3,row-k-2)*bS.bspline(3,col-l-1)+
                                                         
-                coeffs_mirror1[k+0][l+3]*coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k+1)*bS.bspline(3,col-l-2)+ 
-                coeffs_mirror1[k+1][l+3]*coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k+0)*bS.bspline(3,col-l-2)+
-                coeffs_mirror1[k+2][l+3]*coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k-1)*bS.bspline(3,col-l-2)+
-                coeffs_mirror1[k+3][l+3]*coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k-2)*bS.bspline(3,col-l-2)+
+                coeffs_mirror1[k+0][l+3]*bS.bspline(3,row-k+1)*bS.bspline(3,col-l-2)+ 
+                coeffs_mirror1[k+1][l+3]*bS.bspline(3,row-k+0)*bS.bspline(3,col-l-2)+
+                coeffs_mirror1[k+2][l+3]*bS.bspline(3,row-k-1)*bS.bspline(3,col-l-2)+
+                coeffs_mirror1[k+3][l+3]*bS.bspline(3,row-k-2)*bS.bspline(3,col-l-2)+
                 
                 coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k+1)*bS.bspline(3,col-l+1)+ 
                 coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k+0)*bS.bspline(3,col-l+1)+
@@ -144,7 +144,7 @@ public class ImageFusion {
                 coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k+1)*bS.bspline(3,col-l-2)+ 
                 coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k+0)*bS.bspline(3,col-l-2)+
                 coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k-1)*bS.bspline(3,col-l-2)+
-                coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k-2)*bS.bspline(3,col-l-2))/2;
+                coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k-2)*bS.bspline(3,col-l-2))/3;
         return interp_value;
     }
     
@@ -306,15 +306,15 @@ public class ImageFusion {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 		}
-        for(int i=1;i<=64;i++){
-        	fuse[i]=blen.blend(Hysi_Img[i], TMC_IMG,0.3);
-        }
-		ImageView imageView3 = new ImageView();
-		ImageView imageView1 = new ImageView();
-		imageView3.drawImage(fuse[64]);
-		imageView1.drawImage(fuse[25]);
-        Blender1 blender3 = new Blender1();
-        image=blender3.blendHysi(fuse,0.015);
+//        for(int i=1;i<=64;i++){
+//        	fuse[i]=blen.blend(Hysi_Img[i], TMC_IMG,0.3);
+//        }
+//		ImageView imageView3 = new ImageView();
+//		ImageView imageView1 = new ImageView();
+//		imageView3.drawImage(fuse[64]);
+//		imageView1.drawImage(fuse[25]);
+//        Blender1 blender3 = new Blender1();
+//        image=blender3.blendHysi(fuse,0.015);
         double[][] MIXED_CURVE1=null;
         double[][] CURVE1=null;
         double[][] CURVE2=null;
@@ -342,72 +342,22 @@ public class ImageFusion {
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
-        if (image != null){
-            ImageView imageView = new ImageView();
-            imageView.drawImage(image);
-            ImageFusion cubicInterpolation2d = new ImageFusion();
-            double [][] img = cubicInterpolation2d.imageToDoubleArray(image);
-            //INTERpLATION OF iMAGE
-            double [][] img_interp = cubicInterpolation2d.interpolate(img,2);
-//            for(int i = 0; i<img_interp.length; i++)
-//            {
-//                for(int j = 0; j<img_interp[0].length; j++)
-//                {
-//                    System.out.print(img_interp[i][j]+"  ");
-//                }
-//                System.out.println();
-//            }
-            BufferedImage imageInterp = cubicInterpolation2d.doubleArrayToImage(img_interp);
-            try {
-				ImageIO.write(imageInterp, "PNG", new File("./data/interpolate2.png"));
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-            ImageView imageView2 = new ImageView();
-            imageView2.drawImage(imageInterp);
-            
-            
-    		//Write mixing txt file
-            File out = new File(FILE_OUT_PATH +"out3.txt");
-            double[][] pix_spec1=new double[3][72];
-            double[][] pix_spec2=new double[3][72];
-            double[][] MIXED_CURVE=new double[3][72];
-    		try {
-    			File file_1=new File("./data/avgLibrary.txt");
-    			File file_2=new File("./data/avgLunarData.txt");
-    		          Scanner sc1 = new Scanner(file_1);
-    		          Scanner sc2 = new Scanner(file_2);
-    		          sc1.useDelimiter(",");
-    		          sc2.useDelimiter(",");
-    		          for(int i=0;i<3;i++){
-    		              for(int j=0;j<72;j++){
-    		                 pix_spec1[i][j]=sc1.nextDouble();
-    		                  //count++; 
-    		                 pix_spec2[i][j]=sc2.nextDouble();
-    		                 
-    		                 System.out.print(pix_spec1[i][j]+"  ");
-    		                 System.out.println(pix_spec2[i][j]);    		                 
-    		              }
-    		              System.out.println();
-    		              sc1.nextLine();
-    		              sc2.nextLine();
-    		          }
-    		          sc1.close();
-    		          sc2.close();
-    		          ImageFusion mixCurve = new ImageFusion();
-    		          MIXED_CURVE=mixCurve.mixingOfCurveUsingBspline(pix_spec1,pix_spec2,3);
-    		          for(int i=0;i<3;i++){
-    		              for(int j=0;j<72;j++){    		                 
-    		                 System.out.print(MIXED_CURVE[i][j]+"  ");    		                 
-    		              }
-    		              System.out.println();
-    		          }
-//    			PrintWriter pw = new PrintWriter(new FileWriter(out));
-//    			pw.close();
-    		} catch (IOException e) {
-    			e.printStackTrace();
-    		}
-        }
+//        if (image != null){
+//            ImageView imageView = new ImageView();
+//            imageView.drawImage(image);
+//            ImageFusion cubicInterpolation2d = new ImageFusion();
+//            double [][] img = cubicInterpolation2d.imageToDoubleArray(image);
+//            //INTERpLATION OF iMAGE
+//            double [][] img_interp = cubicInterpolation2d.interpolate(img,2);
+//            BufferedImage imageInterp = cubicInterpolation2d.doubleArrayToImage(img_interp);
+//            try {
+//				ImageIO.write(imageInterp, "PNG", new File("./data/interpolate2.png"));
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//            ImageView imageView2 = new ImageView();
+//            imageView2.drawImage(imageInterp);
+//        }
     }
 }
