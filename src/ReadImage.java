@@ -51,9 +51,9 @@ public class ReadImage {
 
             e.printStackTrace();
         }
-        CubicInterpolation2d c1 = new CubicInterpolation2d();
+        ImageFusion c1 = new ImageFusion();
         double[][] newCurv=c1.interpolate(pix_spec, 2);
-        CubicInterpolation2d c2 = new CubicInterpolation2d();
+        ImageFusion c2 = new ImageFusion();
 //        BufferedImage imageInterp1 = c2.doubleArrayToImage(newCurv);
 //        try {
 //			ImageIO.write(imageInterp1, "PNG", new File("./data/interpolate3.png"));

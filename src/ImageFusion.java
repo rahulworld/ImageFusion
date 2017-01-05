@@ -8,13 +8,13 @@ import java.util.Scanner;
 
 import javax.imageio.ImageIO;
 
-public class CubicInterpolation2d {
+public class ImageFusion {
 	private static final String FILE_IN_PATH = "./data/data.txt";
 	private static final String FILE_OUT_PATH = "./data/";
 
     BSplines bS;    
     
-    public CubicInterpolation2d(){
+    public ImageFusion(){
         bS = new BSplines();
     }
     
@@ -106,7 +106,7 @@ public class CubicInterpolation2d {
 //        coeffs_mirror1[k+2][l+3]*coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k-1)*bS.bspline(3,col-l-2)+
 //        coeffs_mirror1[k+3][l+3]*coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k-2)*bS.bspline(3,col-l-2);
         double interp_value =   
-                coeffs_mirror1[k+0][l+0]*coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k+1)*bS.bspline(3,col-l+1)+ 
+                (coeffs_mirror1[k+0][l+0]*coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k+1)*bS.bspline(3,col-l+1)+ 
                 coeffs_mirror1[k+1][l+0]*coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k+0)*bS.bspline(3,col-l+1)+
                 coeffs_mirror1[k+2][l+0]*coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k-1)*bS.bspline(3,col-l+1)+
                 coeffs_mirror1[k+3][l+0]*coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k-2)*bS.bspline(3,col-l+1)+
@@ -144,7 +144,7 @@ public class CubicInterpolation2d {
                 coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k+1)*bS.bspline(3,col-l-2)+ 
                 coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k+0)*bS.bspline(3,col-l-2)+
                 coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k-1)*bS.bspline(3,col-l-2)+
-                coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k-2)*bS.bspline(3,col-l-2);
+                coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k-2)*bS.bspline(3,col-l-2))/2;
         return interp_value;
     }
     
@@ -315,25 +315,37 @@ public class CubicInterpolation2d {
 		imageView1.drawImage(fuse[25]);
         Blender1 blender3 = new Blender1();
         image=blender3.blendHysi(fuse,0.015);
+        double[][] MIXED_CURVE1=null;
+        double[][] CURVE1=null;
+        double[][] CURVE2=null;
 		try {
-//			Blender1 blender = new Blender1();
-//			ImageView imageView = new ImageView();
-//			ImageView imageView1 = new ImageView();
+			Blender1 blender = new Blender1();
+			ImageView imageView = new ImageView();
+			ImageView imageView2 = new ImageView();
+			blender.bi1 = ImageIO.read(new File("./data/take1.png"));
+			blender.bi2 = ImageIO.read(new File("./data/take2.png"));
 //			blender.bi1 = ImageIO.read(new File("./data/tmc2561.png"));
 //			blender.bi2 = ImageIO.read(new File("./data/rgb123.png"));
-//			
-//			imageView.drawImage(blender.bi1);
-//			imageView1.drawImage(blender.bi2);
+			
+			imageView.drawImage(blender.bi1);
+			imageView2.drawImage(blender.bi2);
 //			image = blender.blend(blender.bi1, blender.bi2, 0.65);
-			ImageIO.write(image, "PNG", new File("./data/saras11.png"));
+			ImageFusion mixCurve = new ImageFusion();
+			ImageFusion mixCurve1 = new ImageFusion();
+			CURVE1=mixCurve.imageToDoubleArray(blender.bi1);
+			CURVE2=mixCurve1.imageToDoubleArray(blender.bi2);
+	        MIXED_CURVE1=mixCurve.mixingOfCurveUsingBspline(CURVE1,CURVE2,1);
+			ImageIO.write(mixCurve.doubleArrayToImage(MIXED_CURVE1), "PNG", new File("./data/saras11.png"));
 			//image = ImageIO.read(new File("./data/take3.png"));
+			ImageView imageView5 = new ImageView();
+            imageView5.drawImage(mixCurve.doubleArrayToImage(MIXED_CURVE1));
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
         if (image != null){
             ImageView imageView = new ImageView();
             imageView.drawImage(image);
-            CubicInterpolation2d cubicInterpolation2d = new CubicInterpolation2d();
+            ImageFusion cubicInterpolation2d = new ImageFusion();
             double [][] img = cubicInterpolation2d.imageToDoubleArray(image);
             //INTERpLATION OF iMAGE
             double [][] img_interp = cubicInterpolation2d.interpolate(img,2);
@@ -383,7 +395,7 @@ public class CubicInterpolation2d {
     		          }
     		          sc1.close();
     		          sc2.close();
-    		          CubicInterpolation2d mixCurve = new CubicInterpolation2d();
+    		          ImageFusion mixCurve = new ImageFusion();
     		          MIXED_CURVE=mixCurve.mixingOfCurveUsingBspline(pix_spec1,pix_spec2,3);
     		          for(int i=0;i<3;i++){
     		              for(int j=0;j<72;j++){    		                 
