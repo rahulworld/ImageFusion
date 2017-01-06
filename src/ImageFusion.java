@@ -1,17 +1,25 @@
+import java.awt.BasicStroke;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Scanner;
-
 import javax.imageio.ImageIO;
+import javax.swing.JFrame;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.ValueAxis;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.XYBarRenderer;
+import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.data.xy.XYDataset;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
 
 public class ImageFusion {
-	private static final String FILE_IN_PATH = "./data/data.txt";
-	private static final String FILE_OUT_PATH = "./data/";
-
     BSplines bS;    
     
     public ImageFusion(){
@@ -227,7 +235,6 @@ public class ImageFusion {
 	public static void main(String[] args){
         BufferedImage image = null;
         BufferedImage bufferImage=null;
-        Blender1 blen=new Blender1();
         BufferedImage[] fuse=new BufferedImage[65];
         BufferedImage[] Hysi_Img=new BufferedImage[65];
         BufferedImage TMC_IMG=null;
@@ -319,21 +326,20 @@ public class ImageFusion {
         double[][] CURVE1=null;
         double[][] CURVE2=null;
 		try {
-			Blender1 blender = new Blender1();
 			ImageView imageView = new ImageView();
 			ImageView imageView2 = new ImageView();
-			blender.bi1 = ImageIO.read(new File("./data/take1.png"));
-			blender.bi2 = ImageIO.read(new File("./data/take2.png"));
+			BufferedImage bi1 = ImageIO.read(new File("./data/take1.png"));
+			BufferedImage bi2 = ImageIO.read(new File("./data/take2.png"));
 //			blender.bi1 = ImageIO.read(new File("./data/tmc2561.png"));
 //			blender.bi2 = ImageIO.read(new File("./data/rgb123.png"));
 			
-			imageView.drawImage(blender.bi1);
-			imageView2.drawImage(blender.bi2);
+			imageView.drawImage(bi1);
+			imageView2.drawImage(bi2);
 //			image = blender.blend(blender.bi1, blender.bi2, 0.65);
 			ImageFusion mixCurve = new ImageFusion();
 			ImageFusion mixCurve1 = new ImageFusion();
-			CURVE1=mixCurve.imageToDoubleArray(blender.bi1);
-			CURVE2=mixCurve1.imageToDoubleArray(blender.bi2);
+			CURVE1=mixCurve.imageToDoubleArray(bi1);
+			CURVE2=mixCurve1.imageToDoubleArray(bi2);
 	        MIXED_CURVE1=mixCurve.mixingOfCurveUsingBspline(CURVE1,CURVE2,1);
 			ImageIO.write(mixCurve.doubleArrayToImage(MIXED_CURVE1), "PNG", new File("./data/saras11.png"));
 			//image = ImageIO.read(new File("./data/take3.png"));
@@ -360,4 +366,255 @@ public class ImageFusion {
 //            imageView2.drawImage(imageInterp);
 //        }
     }
+    public class BSplines {
+
+        public double bspline(int degree, double x){
+            double betta;
+            double t;
+            betta = 0;
+            if(degree == 0){                
+                if ((x > -0.5) && (x < 0.5)){
+                    betta = 1.0;
+                }
+                else if( Math.abs(x) == 0.5){
+                    betta = 0.5;
+                }
+                else if( Math.abs(x) > 0.5){
+                    betta = 0.0;
+                }           
+            }
+            else if( degree == 1){
+                if ((x<=-1) || (x>=1)){ 
+                    betta = 0.0;                        
+                }
+                else if ((x>-1) && (x<0)){
+                    betta = x+1;
+                }
+                else if ((x>0) && (x<1)){
+                    betta = -x+1;
+                }
+                else if( x==0){
+                    betta = 1.0;
+                }                                   
+            }       
+            else if (degree == 2 ){     
+                t = 1.5;
+                if ((x <= (0-t)) || (x >= (3-t))){
+                    betta = 0.0;
+                }
+                else if ((x >= (0-t)) && (x< (1-t))) {
+                    betta = ((x+t)*(x+t))/2.0;
+                }
+                else if ((x >= (1-t)) && (x< (2-t))) {
+                    betta = ((x+t)*(x+t)-3.0*(x-1+t)*(x-1+t))/2.0;
+                }
+                else if ((x >= (2-t)) && (x< (3-t))) {
+                    betta = ((x+t)*(x+t) - 3.0*(x-1+t)*(x-1+t) + 
+                            3.0*(x-2+t)*(x-2+t))/2.0;
+                }
+            }
+            else if (degree == 3 ){ 
+                if ((Math.abs(x)>=0) && (Math.abs(x)< 1)) {
+                    betta = 2.0/3.0 - Math.abs(x)*Math.abs(x) + 
+                    (Math.abs(x)*Math.abs(x)*Math.abs(x))/2.0;
+                }
+                else if ((Math.abs(x)>=1) && (Math.abs(x)< 2)) {
+                    betta = ((2-Math.abs(x))*(2-Math.abs(x))*
+                            (2-Math.abs(x)))/6.0;
+                }
+                else if (Math.abs(x) >=2) {
+                    betta = 0.0;
+                }
+            }
+            return betta;
+        }
+    }
+    
+    public class CubicInterpolation1d {
+
+        private double[] mirrorW1d(double s[]){
+            double [] s_mirror = new double[s.length+3];
+            s_mirror[0] = s[1];
+            for(int k=0; k<s.length; k++){
+                s_mirror[k+1] = s[k];
+            }
+            s_mirror[s_mirror.length-2] = s[s.length-2];
+            return s_mirror;
+        }
+        
+        public double[] coeffs(double s[]){         
+            DirectBsplFilter1d directFilter = 
+                    new DirectBsplFilter1d(s.length);
+            double coeffs[] = directFilter.filter(s);
+            double coeffs_mirror[] = mirrorW1d(coeffs);
+            return coeffs_mirror;
+        }   
+        public double interp(double coeffs_mirror[], double x1){
+            BSplines bS = new BSplines();
+            int k = (int)Math.floor(x1);
+            double y1 = coeffs_mirror[k+0]*bS.bspline(3,x1-k+1)+ 
+                        coeffs_mirror[k+1]*bS.bspline(3,x1-k+0)+ 
+                        coeffs_mirror[k+2]*bS.bspline(3,x1-k-1)+ 
+                        coeffs_mirror[k+3]*bS.bspline(3,x1-k-2); 
+            return y1;
+        }
+        
+        public double[] interpolate(double s[], int rate){          
+            double coeffs_mirror[] = coeffs(s);     
+            double s_interp[] = new double[rate*s.length-(rate-1)];
+            for(int k = 0; k < s_interp.length; k++){
+                s_interp[k] = interp(coeffs_mirror, k*(1.0/rate));          
+            }
+            return s_interp;    
+        }
+    }
+    public class DirectBsplFilter1d {
+
+        private int N;
+        private double z1;
+        private double cplus [];
+        private double cminus [];
+        private int k;
+        private double sum0;
+        
+        public DirectBsplFilter1d(int N){
+            this.N = N;
+            z1 = -2.0 +  Math.sqrt(3.0);
+            cplus = new double[N];
+            cminus = new double[N];
+        }
+        
+        public void reset(){
+            for(k=0; k<N; k++){
+                cplus[k] = 0.0;
+                cminus[k] = 0.0;
+            }
+        }
+        
+        public double [] filter(double s[]){
+            sum0 = 0.0;
+            for(k = 0; k < N; k++){
+                sum0 = sum0 + 6.0*s[k]*Math.pow(z1, k);
+            }
+            cplus[0] = sum0;
+            for(k = 1; k < N; k++){
+                cplus[k] = 6.0*s[k] + z1*cplus[k-1];
+            }
+            cminus[N-1] = (z1/(z1*z1-1.0))*
+                    (cplus[N-1] + z1*cplus[N-2]);
+            for(k = N-2; k >= 0; k--){
+                cminus[k] = z1*(cminus[k+1]-cplus[k]);
+            }
+            return cminus;
+        }
+    }
+    public class DirectBsplFilter2d {
+
+        private DirectBsplFilter1d directFilter1dX; 
+        private DirectBsplFilter1d directFilter1dY;         
+        
+        public DirectBsplFilter2d(int M, int N){
+            directFilter1dX = new DirectBsplFilter1d(M);    
+            directFilter1dY = new DirectBsplFilter1d(N);    
+        }
+        
+        public double[][] filter(double [][] img){  
+            double [] row = new double[img[0].length];
+            double [] col = new double[img.length];
+            double [] filt_row = new double[img[0].length];
+            double [] filt_col = new double[img.length];
+            double [][] coeffs = new double[img.length][img[0].length];
+            
+            /*#################### filtrations along y ##################*/
+            for(int i=0; i<img.length; i++){
+                for(int j=0; j<img[0].length; j++){
+                    row[j] = img[i][j];
+                }
+                filt_row = directFilter1dY.filter(row);
+                for(int j=0; j<img[0].length; j++){
+                    coeffs[i][j] = filt_row[j];
+                }
+                directFilter1dY.reset();
+            }
+            /*#################### filtrations along y ##################*/
+                        
+            /*#################### filtrations along x ##################*/
+            for(int j=0; j<img[0].length; j++){
+                for(int i=0; i<img.length; i++){
+                    col[i] = coeffs[i][j];
+                }
+                filt_col = directFilter1dX.filter(col);
+                for(int i=0; i<img.length; i++){
+                    coeffs[i][j] = filt_col[i];
+                }
+                directFilter1dX.reset();
+            }
+            /*#################### filtrations along x ##################*/             
+            return coeffs;                                                  
+        }
+
+    }
+    public class Figure {           
+        private JFrame frame;        
+        private XYPlot plot;
+        private int dataSetsCounter = 0;
+        public Figure(String name, String xName, String yName) {      
+            frame = new JFrame("Figure");
+            frame.getContentPane().setLayout(new BorderLayout());       
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);        
+            plot = new XYPlot();    
+            plot.setBackgroundPaint(Color.WHITE); 
+            plot.setDomainGridlinePaint(Color.LIGHT_GRAY);
+            plot.setRangeGridlinePaint(Color.LIGHT_GRAY);
+            NumberAxis domainAxis = new NumberAxis(xName);
+            ValueAxis rangeAxis = new NumberAxis(yName);        
+            plot.setDomainAxis(domainAxis);        
+            plot.setRangeAxis(rangeAxis);
+            JFreeChart chart = new JFreeChart(plot);        
+            RenderingHints renderingHints = 
+                    new  RenderingHints(RenderingHints.KEY_ANTIALIASING,
+                                        RenderingHints.VALUE_ANTIALIAS_ON);  
+            renderingHints.put(RenderingHints.KEY_STROKE_CONTROL, 
+                               RenderingHints.VALUE_STROKE_PURE);
+            chart.setRenderingHints(renderingHints);    
+            chart.removeLegend();
+            chart.setTitle(name);
+            ChartPanel chartPanel = new ChartPanel(chart);       
+            frame.getContentPane().add(chartPanel, BorderLayout.CENTER);
+            frame.setSize(400, 200);       
+            frame.setVisible(true);       
+        }
+
+        public void line(double x[], double y[], Color color, float lineWidth) {        
+            XYDataset dataset = createDataset(x,y);         
+            plot.setDataset(dataSetsCounter, dataset);          
+            XYLineAndShapeRenderer renderer = 
+                    new XYLineAndShapeRenderer(true, false);      
+            BasicStroke basicStroke = new BasicStroke(lineWidth);
+            renderer.setSeriesStroke(0, basicStroke);     
+            renderer.setSeriesPaint(0, color);
+            plot.setRenderer(dataSetsCounter, renderer); 
+            dataSetsCounter++;        
+        }
+
+        public void stem(double x[], double y[], Color color, float lineWidth) {        
+            XYDataset dataset = createDataset(x,y);         
+            plot.setDataset(dataSetsCounter, dataset);          
+            XYBarRenderer renderer = new XYBarRenderer(0.98f);      
+            renderer.setShadowVisible(false);    
+            renderer.setSeriesPaint(0, color);
+            plot.setRenderer(dataSetsCounter, renderer);        
+            dataSetsCounter++;        
+        }
+        
+        private XYDataset createDataset(double x[], double y[]) {
+            XYSeries series = new XYSeries("");
+            for(int i=0; i<y.length;i++){
+                series.add(x[i],y[i]);   
+            }       
+            XYSeriesCollection dataset = new XYSeriesCollection();
+            dataset.addSeries(series);                          
+            return dataset;       
+        }
+    }    
 }

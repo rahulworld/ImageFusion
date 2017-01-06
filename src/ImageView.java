@@ -1,6 +1,9 @@
 import java.awt.*;
+
 import javax.swing.*;
+
 import java.awt.image.*;
+
 import javax.swing.JFrame;
 
 @SuppressWarnings("serial")
