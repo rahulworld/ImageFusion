@@ -115,28 +115,8 @@ public class SuperCurveUsingBspline extends Object implements Cloneable, Seriali
     public double MixingAndFusionOfTwoCurve(double[][] coeffs_mirror1,double[][] coeffs_mirror2, double row, double col){    
         int k = (int)Math.floor(row);   
         int l = (int)Math.floor(col);       
-//        double interp_value =   
-//        coeffs_mirror1[k+0][l+0]*coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k+1)*bS.bspline(3,col-l+1)+ 
-//        coeffs_mirror1[k+1][l+0]*coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k+0)*bS.bspline(3,col-l+1)+
-//        coeffs_mirror1[k+2][l+0]*coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k-1)*bS.bspline(3,col-l+1)+
-//        coeffs_mirror1[k+3][l+0]*coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k-2)*bS.bspline(3,col-l+1)+
-//                                                                    
-//        coeffs_mirror1[k+0][l+1]*coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k+1)*bS.bspline(3,col-l+0)+ 
-//        coeffs_mirror1[k+1][l+1]*coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k+0)*bS.bspline(3,col-l+0)+
-//        coeffs_mirror1[k+2][l+1]*coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k-1)*bS.bspline(3,col-l+0)+
-//        coeffs_mirror1[k+3][l+1]*coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k-2)*bS.bspline(3,col-l+0)+
-//                                                                                                
-//        coeffs_mirror1[k+0][l+2]*coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k+1)*bS.bspline(3,col-l-1)+ 
-//        coeffs_mirror1[k+1][l+2]*coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k+0)*bS.bspline(3,col-l-1)+
-//        coeffs_mirror1[k+2][l+2]*coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k-1)*bS.bspline(3,col-l-1)+
-//        coeffs_mirror1[k+3][l+2]*coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k-2)*bS.bspline(3,col-l-1)+
-//                                                
-//        coeffs_mirror1[k+0][l+3]*coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k+1)*bS.bspline(3,col-l-2)+ 
-//        coeffs_mirror1[k+1][l+3]*coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k+0)*bS.bspline(3,col-l-2)+
-//        coeffs_mirror1[k+2][l+3]*coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k-1)*bS.bspline(3,col-l-2)+
-//        coeffs_mirror1[k+3][l+3]*coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k-2)*bS.bspline(3,col-l-2);
         double interp_value =   
-                coeffs_mirror1[k+0][l+0]*bS.bspline(3,row-k+1)*bS.bspline(3,col-l+1)+ 
+                (coeffs_mirror1[k+0][l+0]*bS.bspline(3,row-k+1)*bS.bspline(3,col-l+1)+ 
                 coeffs_mirror1[k+1][l+0]*bS.bspline(3,row-k+0)*bS.bspline(3,col-l+1)+
                 coeffs_mirror1[k+2][l+0]*bS.bspline(3,row-k-1)*bS.bspline(3,col-l+1)+
                 coeffs_mirror1[k+3][l+0]*bS.bspline(3,row-k-2)*bS.bspline(3,col-l+1)+
@@ -174,7 +154,7 @@ public class SuperCurveUsingBspline extends Object implements Cloneable, Seriali
                 coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k+1)*bS.bspline(3,col-l-2)+ 
                 coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k+0)*bS.bspline(3,col-l-2)+
                 coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k-1)*bS.bspline(3,col-l-2)+
-                coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k-2)*bS.bspline(3,col-l-2);
+                coeffs_mirror2[k+0][l+0]*bS.bspline(3,row-k-2)*bS.bspline(3,col-l-2))/2;
         return interp_value;
     }
     
@@ -193,15 +173,27 @@ public class SuperCurveUsingBspline extends Object implements Cloneable, Seriali
     }
     
 	public static void main(String[] args){
-    		//Write mixing txt file
-            File out = new File(FILE_OUT_PATH +"out3.txt");
-            double[][] l1=new double[1][72];
-            double[][] l2=new double[1][72];
-            double[][] l3=new double[1][72];
-            double[][] d1=new double[1][72];
-            double[][] d2=new double[1][72];
-            double[][] d3=new double[1][72];
-            double[][] MIXED_CURVE=new double[3][72];
+
+            double[][] l1=new double[3][75];
+            double[][] l2=new double[3][75];
+            double[][] l3=new double[3][75];
+            double[][] d1=new double[3][75];
+            double[][] d2=new double[3][75];
+            double[][] d3=new double[3][75];
+            
+            
+//            double[][] MIXED_CURVE=new double[3][75];
+            double[][] SUPER_CURVE1=new double[3][72];
+            double[][] SUPER_CURVE2=new double[3][72];
+            double[][] SUPER_CURVE3=new double[3][72];
+            double[][] SUPER_CURVE4=new double[3][72];
+            double[][] SUPER_CURVE5=new double[3][72];
+            double[][] SUPER_CURVE6=new double[3][72];
+            double[][] SUPER_CURVE7=new double[3][72];
+            double[][] SUPER_CURVE8=new double[3][72];
+            double[][] SUPER_CURVE9=new double[3][72];
+            
+            
     		try {
     			File file_1=new File("./data/l1.txt");
     			File file_2=new File("./data/l2.txt");
@@ -251,11 +243,6 @@ public class SuperCurveUsingBspline extends Object implements Cloneable, Seriali
     		          sc4.close();
     		          sc5.close();
     		          sc6.close();
-    		          SuperCurveUsingBspline mixCurve = new SuperCurveUsingBspline();
-    		          for(int k=0;k<3;k++){
-    		        	  for(int l=0;l<3;l++){    		        		  
-    		        	  }
-    		          }
     		          /*
     		           * Using transformation see error using matching error class 
     		           * scaling and shearing
@@ -273,46 +260,136 @@ public class SuperCurveUsingBspline extends Object implements Cloneable, Seriali
     		           * 
     		           */
     		          //DATASETS
-    		          Matrix A1=new Matrix(d1);
-    		          Matrix B1=new Matrix(d2);
-    		          Matrix C1=new Matrix(d3);
-    		          Matrix D=A1.times(10);
-    		          Matrix E=B1.times(10);
-    		          Matrix F=C1.times(10);
-//    		          //LIBRARRY SETS
-//    		          Matrix A2=new Matrix(d1);
-//    		          Matrix B2=new Matrix(d2);
-//    		          Matrix C2=new Matrix(d3);
-//    		          A1.print(1, 6);
-//    		          D.print(1, 6);
-//    		          B1.print(1, 6);
-//    		          E.print(1, 6);
-//    		          C1.print(1, 6);
-//    		          F.print(1, 6);
-    		          System.out.println("\n\n========================After Transformation===============\n\n");
-    		          for(int i=0;i<1;i++){
-    		              for(int j=0;j<72;j++){
-    		                 System.out.print(l1[i][j]+"  ");
-    		                 System.out.print(l2[i][j]+"  ");
-    		                 System.out.print(l3[i][j]+"  ");
-    		                 System.out.print(D.getArray()[i][j]+"  ");
-    		                 System.out.print(E.getArray()[i][j]+"  ");
-    		                 System.out.println(F.getArray()[i][j]); 		                 
-    		              }
-    		          }
-    		          MatchError M1=new MatchError();
-    		          if(M1.almostEquals(l1, D.getArrayCopy(),0.5000000)){
-    		        	  System.out.println("\n YES, Curved Matched");
-    		          }else{
-    		        	  System.out.println("\n NO");
-    		          }
+//    		          Matrix A1=new Matrix(d1);
+//    		          Matrix B1=new Matrix(d2);
+//    		          Matrix C1=new Matrix(d3);
+//    		          Matrix D=A1.times(10);
+//    		          Matrix E=B1.times(10);
+//    		          Matrix F=C1.times(10);
+////    		          //LIBRARRY SETS
+////    		          Matrix A2=new Matrix(d1);
+////    		          Matrix B2=new Matrix(d2);
+////    		          Matrix C2=new Matrix(d3);
+////    		          A1.print(1, 6);
+////    		          D.print(1, 6);
+////    		          B1.print(1, 6);
+////    		          E.print(1, 6);
+////    		          C1.print(1, 6);
+////    		          F.print(1, 6);
+//    		          System.out.println("\n\n========================After Transformation===============\n\n");
+//    		          for(int i=0;i<1;i++){
+//    		              for(int j=0;j<72;j++){
+//    		                 System.out.print(l1[i][j]+"  ");
+//    		                 System.out.print(l2[i][j]+"  ");
+//    		                 System.out.print(l3[i][j]+"  ");
+//    		                 System.out.print(D.getArray()[i][j]+"  ");
+//    		                 System.out.print(E.getArray()[i][j]+"  ");
+//    		                 System.out.println(F.getArray()[i][j]); 		                 
+//    		              }
+//    		          }
+//    		          MatchError M1=new MatchError();
+//    		          if(M1.almostEquals(l1, D.getArrayCopy(),0.5000000)){
+//    		        	  System.out.println("\n YES, Curved Matched");
+//    		          }else{
+//    		        	  System.out.println("\n NO");
+//    		          }
+    		          
+    		          
+//    		          SuperCurveUsingBspline mixCurve = new SuperCurveUsingBspline();
 //    		          MIXED_CURVE=mixCurve.mixingOfCurveUsingBspline(l1,d1,1);
 //    		          for(int i=0;i<1;i++){
 //    		              for(int j=0;j<72;j++){    		                 
-//    		                 System.out.print(MIXED_CURVE[i][j]+"  ");    		                 
+//    		                 System.out.println(MIXED_CURVE[i][j]+"  ");    		                 
 //    		              }
 //    		              System.out.println();
 //    		          }
+    		          
+
+    		          SuperCurveUsingBspline mixCurve1 = new SuperCurveUsingBspline();
+    		          SuperCurveUsingBspline mixCurve2 = new SuperCurveUsingBspline();
+    		          SuperCurveUsingBspline mixCurve3 = new SuperCurveUsingBspline();
+    		          SuperCurveUsingBspline mixCurve4 = new SuperCurveUsingBspline();
+    		          SuperCurveUsingBspline mixCurve5 = new SuperCurveUsingBspline();
+    		          SuperCurveUsingBspline mixCurve6 = new SuperCurveUsingBspline();
+    		          SuperCurveUsingBspline mixCurve7 = new SuperCurveUsingBspline();
+    		          SuperCurveUsingBspline mixCurve8 = new SuperCurveUsingBspline();
+    		          SuperCurveUsingBspline mixCurve9 = new SuperCurveUsingBspline();
+    		          
+    		          
+    		          System.out.println("Curve From l1 and d1");
+    		          SUPER_CURVE1=mixCurve1.mixingOfCurveUsingBspline(l1,d1,1);
+    		          for(int i=0;i<1;i++){
+    		              for(int j=0;j<72;j++){    		                 
+    		                 System.out.print(SUPER_CURVE1[i][j]+"  ");    		                 
+    		              }
+    		              System.out.println();
+    		          }
+    		          System.out.println("Curve From l1 and d2");
+    		          SUPER_CURVE2=mixCurve2.mixingOfCurveUsingBspline(l1,d2,1);
+    		          for(int i=0;i<1;i++){
+    		              for(int j=0;j<72;j++){    		                 
+    		                 System.out.print(SUPER_CURVE2[i][j]+"  ");    		                 
+    		              }
+    		              System.out.println();
+    		          }
+    		          System.out.println("Curve From l1 and d3");
+    		          SUPER_CURVE3=mixCurve3.mixingOfCurveUsingBspline(l1,d3,1);
+    		          for(int i=0;i<1;i++){
+    		              for(int j=0;j<72;j++){    		                 
+    		                 System.out.print(SUPER_CURVE3[i][j]+"  ");    		                 
+    		              }
+    		              System.out.println();
+    		          }
+    		          System.out.println("Curve From l2 and d1");
+    		          SUPER_CURVE4=mixCurve4.mixingOfCurveUsingBspline(l2,d1,1);
+    		          for(int i=0;i<1;i++){
+    		              for(int j=0;j<72;j++){    		                 
+    		                 System.out.print(SUPER_CURVE4[i][j]+"  ");    		                 
+    		              }
+    		              System.out.println();
+    		          }
+    		          System.out.println("Curve From l2 and d2");
+    		          SUPER_CURVE5=mixCurve5.mixingOfCurveUsingBspline(l2,d2,1);
+    		          for(int i=0;i<1;i++){
+    		              for(int j=0;j<72;j++){    		                 
+    		                 System.out.print(SUPER_CURVE5[i][j]+"  ");    		                 
+    		              }
+    		              System.out.println();
+    		          }
+    		          System.out.println("Curve From l2 and d3");
+    		          SUPER_CURVE6=mixCurve6.mixingOfCurveUsingBspline(l2,d3,1);
+    		          for(int i=0;i<1;i++){
+    		              for(int j=0;j<72;j++){    		                 
+    		                 System.out.print(SUPER_CURVE6[i][j]+"  ");    		                 
+    		              }
+    		              System.out.println();
+    		          }
+    		          System.out.println("Curve From l3 and d1");
+    		          SUPER_CURVE7=mixCurve7.mixingOfCurveUsingBspline(l3,d1,1);
+    		          for(int i=0;i<1;i++){
+    		              for(int j=0;j<72;j++){    		                 
+    		                 System.out.print(SUPER_CURVE7[i][j]+"  ");    		                 
+    		              }
+    		              System.out.println();
+    		          }
+    		          System.out.println("Curve From l3 and d2");
+    		          SUPER_CURVE8=mixCurve8.mixingOfCurveUsingBspline(l3,d2,1);
+    		          for(int i=0;i<1;i++){
+    		              for(int j=0;j<72;j++){    		                 
+    		                 System.out.print(SUPER_CURVE8[i][j]+"  ");    		                 
+    		              }
+    		              System.out.println();
+    		          }
+    		          System.out.println("Curve From l3 and d3");
+    		          SUPER_CURVE9=mixCurve9.mixingOfCurveUsingBspline(l3,d3,1);
+    		          for(int i=0;i<1;i++){
+    		              for(int j=0;j<72;j++){    		                 
+    		                 System.out.print(SUPER_CURVE9[i][j]+"  ");    		                 
+    		              }
+    		              System.out.println();
+    		          }
+    		          
+    		          
 //    			PrintWriter pw = new PrintWriter(new FileWriter(out));
 //    			pw.close();
     		} catch (IOException e) {
@@ -452,8 +529,7 @@ public class SuperCurveUsingBspline extends Object implements Cloneable, Seriali
 	        for(k = 1; k < N; k++){
 	            cplus[k] = 6.0*s[k] + z1*cplus[k-1];
 	        }
-	        cminus[N-1] = (z1/(z1*z1-1.0))*
-	                (cplus[N-1] + z1*cplus[N-2]);
+	        cminus[N-1] = (z1/(z1*z1-1.0))*(cplus[N-1] + z1*cplus[N-2]);
 	        for(k = N-2; k >= 0; k--){
 	            cminus[k] = z1*(cminus[k+1]-cplus[k]);
 	        }
